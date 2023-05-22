@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+dataset
+.vscode
+model/
+
 # C extensions
 *.so
 
@@ -128,4 +132,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-dataset/users
