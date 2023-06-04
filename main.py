@@ -48,3 +48,7 @@ if __name__ == '__main__':
     if recognize:
         # Function to recognize faces
         recognize_faces_object()
+    # If no argument is provided, the script will automatically start the face recognition system.
+    if not (face_name or train or recognize):
+        # Function to recognize faces
+        recognize_faces_object()
