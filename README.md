@@ -1,28 +1,68 @@
-# Realtime Face Detection using OpenCV and Python
+"""
 
-## Create Local Binary Patterns Histograms for face recognition
+# Face Recognition System
 
-This Python script creates Local Binary Patterns Histograms (LBPH) for face recognition. It captures face images from a video stream, detects faces using Haar cascades, and saves the images in a dataset folder. The script then trains a LBPH model with the saved dataset and stores it in the trainer folder.
+This is a Python code for a face recognition system. It allows you to collect face data, train the system with the collected data, and recognize faces in real-time.
 
-## Requirements
+## Prerequisites
 
-* Python 2.7
-* OpenCV
-* Numpy
-* Pillow
+Before running the code, make sure you have the following prerequisites installed:
+
+- Python 3.x
+- OpenCV library
+
+You can install the required packages using the following command:
+
+```bash
+pip install opencv-python
+```
+
+## Getting Started
+
+1. Clone the repository or download the code files to your local machine.
+
+2. Update the configuration (config.ini) file:
+   - The configuration file (`config.ini`) is automatically created if it doesn't exist.
+   - It contains two options:
+     - `face_id_count`: The current count of face IDs. Do not modify this manually.
+     - `face_samples`: The number of face samples to collect for training. Modify this value according to your needs.
+
+3. Collect Face Data:
+   - Run the script `data_collection.py` to capture face data for a new user.
+   - Use the `-n` or `--name` argument followed by the name of the user to create a new user directory.
+   - Example: `python data_collection.py -n John`
+
+4. Train the Face Recognition System:
+   - After collecting face data for one or more users, run the script `face_training.py` to train the face recognition model.
+   - This step will generate a trained model file (`trainer.yml`) in the `trainer` directory.
+
+5. Recognize Faces:
+   - Run the script `detector.py` to start the real-time face recognition system.
+   - The system will use the trained model to recognize faces captured by the camera.
 
 ## Usage
 
-Run the following command:
+To create a new user and collect face data:
 
 ```bash
-    python face_detection.py
+python main.py -n [user_name]
 ```
 
-* Capture face images using the script
-* Train the LBPH model using the captured images
-* Use the trained model for face recognition
+To train the face recognition system:
+
+```bash
+python main.py -t
+```
+
+To recognize faces in real-time:
+
+```bash
+python main.py -r
+```
+
+Note: If no argument is provided, the script will automatically start the face recognition system.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the [MIT License](LICENSE). Feel free to modify and distribute the code for personal or commercial use.
+"""

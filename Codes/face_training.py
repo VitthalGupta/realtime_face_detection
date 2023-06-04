@@ -1,10 +1,3 @@
-''''
-Training Multiple Faces stored on a DataBase:
-	==> Each face should have a unique numeric integer ID as 1, 2, 3, etc                       
-	==> LBPH computed model will be saved on trainer/ directory. (if it does not exist, pls create one)
-	==> for using PIL, install pillow library with "pip install pillow" 
-'''
-
 import cv2
 import numpy as np
 import os
@@ -14,7 +7,7 @@ from path import path_faces, path_trainer
 def train_faces():
     path = path_faces
 
-    recognizer = cv2.face.EigenFaceRecognizer_create()
+    recognizer = cv2.face.LBPHFaceRecognizer_create() if cv2.__version__.startswith('4') else cv2.face.createLBPHFaceRecognizer()
     detector = cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
@@ -57,54 +50,3 @@ def train_faces():
             len(np.unique(ids))))
     else:
         print("Insufficient data to train the recognizer. Make sure the dataset contains multiple samples for each person.")
-
-
-
-
-# import cv2
-# import numpy as np
-# from PIL import Image
-# import os
-# from path import path, path_dataset, path_faces
-
-# # Path for face image database
-# path = path_faces
-
-# recognizer = cv2.face.LBPHFaceRecognizer_create()
-# detector = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-
-# # function to get the images and label data
-
-
-# def getImagesAndLabels(path):
-
-#     imagePaths = [os.path.join(path, f) for f in os.listdir(path)]
-#     faceSamples = []
-#     ids = []
-
-#     for imagePath in imagePaths:
-
-#         PIL_img = Image.open(imagePath).convert('L')  # convert it to grayscale
-#         img_numpy = np.array(PIL_img, 'uint8')
-
-#         id = int(os.path.split(imagePath)[-1].split(".")[0])
-#         faces = detector.detectMultiScale(img_numpy)
-
-#         for (x, y, w, h) in faces:
-#             faceSamples.append(img_numpy[y:y+h, x:x+w])
-#             ids.append(id)
-
-#     return faceSamples, ids
-
-
-# print("\n [INFO] Training faces. It will take a few seconds. Wait ...")
-# faces, ids = getImagesAndLabels(path)
-# recognizer.train(faces, np.array(ids))
-
-# # Save the model into trainer/trainer.yml
-# # recognizer.save() worked on Mac, but not on Pi
-# recognizer.write('trainer/trainer.yml')
-
-# # Print the numer of faces trained and end program
-# print("\n [INFO] {0} faces trained. Exiting Program".format(
-#     len(np.unique(ids))))

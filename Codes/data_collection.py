@@ -1,19 +1,41 @@
 import cv2
 import os
 import numpy as np
+import configparser
 from path import path, path_dataset, path_faces
 
 
-def create_user_directory(face_id):
+def create_user_directory(face_name):
+    
+    # read user count from config.ini
+    config = configparser.ConfigParser()
+    config.read(os.path.join(path, 'config.ini'))
+    face_id_count = config.getint('FaceRecognition', 'face_id_count')
+    face_id_count += 1
+    config.set('FaceRecognition', 'face_id_count', str(face_id_count))
+    #  associate face_id with face_id_count
+    config.set('FaceRecognition', str(face_name), str(face_id_count))
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
     os.chdir(path_faces)
     x = os.listdir()
-    if face_id not in x:
-        os.mkdir(face_id)
-    os.chdir(face_id)
+    if face_id_count not in x:
+        os.mkdir(str(face_id_count))
+    os.chdir(str(face_id_count))
     print(os.getcwd())
 
+    # initiating capture of face images
+    capture_faces(face_name)
 
-def capture_faces(face_id):
+
+def capture_faces(face_name):
+    # Get the face id associated with the face name from config.ini
+    config = configparser.ConfigParser()
+    config.read(os.path.join(path, 'config.ini'))
+    face_id = config.getint('FaceRecognition', str(face_name))
+    face_samples = config.getint('FaceRecognition', 'face_samples')
+
+    # Initiating Video capture
     cam = cv2.VideoCapture(0)
     cam.set(3, 640)  # set video width
     cam.set(4, 480)  # set video height
@@ -29,7 +51,7 @@ def capture_faces(face_id):
     first_face_w = None
     first_face_h = None
 
-    while count < 50:
+    while count < face_samples:
         ret, img = cam.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = face_detector.detectMultiScale(gray, 1.3, 5)
@@ -61,7 +83,7 @@ def capture_faces(face_id):
         for i, face in enumerate(faces_data):
             file_name = str(face_id) + '_' + str(i) + '.png'
             cv2.imwrite(file_name, face)
-            print(f"Face image saved: {file_name}")
+            # print(f"Face image saved: {file_name}")
     else:
         print("No faces captured. Skipping saving images.")
 
